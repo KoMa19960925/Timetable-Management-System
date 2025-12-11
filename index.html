@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Timetable Management System</h1>
+            <p class="subtitle">For Teachers and Students</p>
+        </header>
+        
+        <div class="login-section" id="loginSection">
+            <div class="login-card">
+                <div class="role-icon">👨‍🏫</div>
+                <h2>Teacher Login</h2>
+                <p>Add, remove and manage class timetables</p>
+                <button class="login-btn teacher-btn" id="teacherLoginBtn">Login as Teacher</button>
+            </div>
+            
+            <div class="login-card">
+                <div class="role-icon">👨‍🎓</div>
+                <h2>Student Login</h2>
+                <p>View your class timetable</p>
+                <button class="login-btn" id="studentLoginBtn">Login as Student</button>
+            </div>
+        </div>
+        
+        <!-- Teacher Interface -->
+        <div class="interface" id="teacherInterface">
+            <div class="interface-header">
+                <h2>Teacher Dashboard - Manage Timetable</h2>
+                <button class="logout-btn" id="teacherLogoutBtn">Logout</button>
+            </div>
+            
+            <div class="notification" id="teacherNotification"></div>
+            
+            <div class="timetable-controls">
+                <div class="control-group">
+                    <label for="daySelect">Select Day</label>
+                    <select id="daySelect">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="periodSelect">Select Period</label>
+                    <select id="periodSelect">
+                        <option value="1">Period 1</option>
+                        <option value="2">Period 2</option>
+                        <option value="3">Period 3</option>
+                        <option value="4">Period 4</option>
+                        <option value="5">Period 5</option>
+                        <option value="6">Period 6</option>
+                        <option value="7">Period 7</option>
+                        <option value="8">Period 8</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="subjectSelect">Select Subject</label>
+                    <select id="subjectSelect">
+                        <option value="English">English</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Maths">Maths</option>
+                        <option value="Science">Science</option>
+                        <option value="ICT">ICT</option>
+                        <option value="Soc.Sci">Social Science</option>
+                        <option value="Drawing">Drawing</option>
+                        <option value="">-- Free --</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="action-btns">
+                <button class="action-btn add-btn" id="addPeriodBtn">Add/Update Period</button>
+                <button class="action-btn remove-btn" id="removePeriodBtn">Remove Period</button>
+                <button class="action-btn save-btn" id="saveTimetableBtn">Save Timetable</button>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="color-box english"></div>
+                    <span>English</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box hindu"></div>
+                    <span>Hindu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box tamil"></div>
+                    <span>Tamil</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box maths"></div>
+                    <span>Maths</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box science"></div>
+                    <span>Science</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box ict"></div>
+                    <span>ICT</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box soc-sci"></div>
+                    <span>Social Science</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box drawing"></div>
+                    <span>Drawing</span>
+                </div>
+            </div>
+            
+            <div class="timetable-container">
+                <table id="teacherTimetable">
+                    <thead>
+                        <tr>
+                            <th class="day-header">Day</th>
+                            <th class="period-header">Period 1</th>
+                            <th class="period-header">Period 2</th>
+                            <th class="period-header">Period 3</th>
+                            <th class="period-header">Period 4</th>
+                            <th class="break-cell" rowspan="8">BREAK</th>
+                            <th class="period-header">Period 5</th>
+                            <th class="period-header">Period 6</th>
+                            <th class="period-header">Period 7</th>
+                            <th class="period-header">Period 8</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTimetableBody">
+                        <!-- Timetable will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Student Interface -->
+        <div class="interface" id="studentInterface">
+            <div class="interface-header">
+                <h2>Student Dashboard - View Timetable</h2>
+                <button class="logout-btn" id="studentLogoutBtn">Logout</button>
+            </div>
+            
+            <div class="notification info" id="studentNotification">
+                <strong>Today's Schedule Highlighted</strong> - You can view the timetable for all days of the week.
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="color-box english"></div>
+                    <span>English</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box hindu"></div>
+                    <span>Hindu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box tamil"></div>
+                    <span>Tamil</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box maths"></div>
+                    <span>Maths</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box science"></div>
+                    <span>Science</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box ict"></div>
+                    <span>ICT</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box soc-sci"></div>
+                    <span>Social Science</span>
+                </div>
+                <div class="legend-item">
+                    <div class="color-box drawing"></div>
+                    <span>Drawing</span>
+                </div>
+            </div>
+            
+            <div class="timetable-container">
+                <table id="studentTimetable">
+                    <thead>
+                        <tr>
+                            <th class="day-header">Day</th>
+                            <th class="period-header">Period 1</th>
+                            <th class="period-header">Period 2</th>
+                            <th class="period-header">Period 3</th>
+                            <th class="period-header">Period 4</th>
+                            <th class="break-cell" rowspan="8">BREAK</th>
+                            <th class="period-header">Period 5</th>
+                            <th class="period-header">Period 6</th>
+                            <th class="period-header">Period 7</th>
+                            <th class="period-header">Period 8</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTimetableBody">
+                        <!-- Timetable will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
