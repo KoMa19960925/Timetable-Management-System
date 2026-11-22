@@ -126,19 +126,106 @@ function showTeacherMessage(message, type) {
     }, 3000);
 }
 
-get("registerBtn").addEventListener("click", () => {
-    get("registrationDialog").showModal();
-});
+const accountDialog = get("accountDialog");
+const accountForm = get("accountForm");
+const accountRole = get("accountRole");
+const accountEmail = get("accountEmail");
+const accountPassword = get("accountPassword");
+const accountMessage = get("accountMessage");
+const accountSubmit = get("accountSubmit");
+const accountCancel = get("accountCancel");
+let registering = false;
 
-get("teacherLoginBtn").addEventListener("click", () => {
-    loginSection.style.display = "none";
-    teacherInterface.classList.add("active");
-    showTeacherTimetable();
+function setAccountMode(mode, role) {
+    registering = mode === "register";
+    accountRole.value = role;
+    get("accountRoleField").hidden = !registering;
+    get("accountTitle").textContent = registering
+        ? "Register"
+        : role === "teacher" ? "Teacher Login" : "Student Login";
+    accountSubmit.textContent = registering ? "Register" : "Login";
+    accountPassword.autocomplete = registering ? "new-password" : "current-password";
+}
+
+function openAccountDialog(mode, role) {
+    accountForm.reset();
+    accountMessage.textContent = "";
+    setAccountMode(mode, role);
+    accountDialog.showModal();
+}
+
+async function hashPassword(password, salt) {
+    const key = await crypto.subtle.importKey(
+        "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]
+    );
+    const digest = await crypto.subtle.deriveBits({
+        name: "PBKDF2", hash: "SHA-256", salt, iterations: 600000
+    }, key, 256);
+    return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+}
+
+get("registerBtn").addEventListener("click", () => openAccountDialog("register", "student"));
+get("teacherLoginBtn").addEventListener("click", () => openAccountDialog("login", "teacher"));
+get("studentLoginBtn").addEventListener("click", () => openAccountDialog("login", "student"));
+accountCancel.addEventListener("click", () => accountDialog.close());
+accountDialog.addEventListener("cancel", event => {
+    if (accountSubmit.disabled) event.preventDefault();
 });
-get("studentLoginBtn").addEventListener("click", () => {
-    loginSection.style.display = "none";
-    studentInterface.classList.add("active");
-    showStudentTimetable();
+accountDialog.addEventListener("close", () => accountForm.reset());
+
+accountForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (accountSubmit.disabled) return;
+    const role = accountRole.value;
+    const email = accountEmail.value.trim().toLowerCase();
+    const password = accountPassword.value;
+    const key = `tms:demo-account:${email}`;
+    accountSubmit.disabled = true;
+    accountCancel.disabled = true;
+    accountMessage.textContent = "";
+
+    try {
+        const account = JSON.parse(localStorage.getItem(key));
+        if (registering) {
+            if (account) {
+                accountMessage.textContent = "An account with this email already exists.";
+                return;
+            }
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const hash = await hashPassword(password, salt);
+            if (localStorage.getItem(key) !== null) {
+                accountMessage.textContent = "An account with this email already exists.";
+                return;
+            }
+            localStorage.setItem(key, JSON.stringify({ role, salt: [...salt], hash }));
+            setAccountMode("login", role);
+            accountPassword.value = "";
+            accountMessage.textContent = "Account created. Enter your password to log in.";
+            accountPassword.focus();
+            return;
+        }
+
+        if (!account || account.role !== role ||
+            account.hash !== await hashPassword(password, new Uint8Array(account.salt))) {
+            accountMessage.textContent = "Email or password is incorrect for this role.";
+            return;
+        }
+
+        accountDialog.close();
+        loginSection.style.display = "none";
+        if (role === "teacher") {
+            teacherInterface.classList.add("active");
+            showTeacherTimetable();
+        } else {
+            studentInterface.classList.add("active");
+            showStudentTimetable();
+        }
+    } catch {
+        accountMessage.textContent = "Account access is unavailable in this browser.";
+    } finally {
+        accountSubmit.disabled = false;
+        accountCancel.disabled = false;
+    }
 });
 
 const backToTeacher = get("backToTeacher");

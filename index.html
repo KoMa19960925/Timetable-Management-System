@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=account-button-colors">
+    <link rel="stylesheet" href="styles.css?v=local-accounts">
 </head>
 <body>
     <div class="container" id="page-top">
@@ -243,13 +243,32 @@
         <footer class="footer">&copy; 2026 Timetable Management System</footer>
     </div>
     
-    <dialog class="registration-dialog" id="registrationDialog" aria-labelledby="registrationTitle">
-        <h2 id="registrationTitle">Register</h2>
-        <p>Account registration is not available yet.</p>
-        <form method="dialog">
-            <button class="dashboard-link" type="submit">Close</button>
+    <dialog class="registration-dialog" id="accountDialog" aria-labelledby="accountTitle">
+        <h2 id="accountTitle">Login</h2>
+        <p>Demo accounts are saved in this browser. Use a demo password.</p>
+        <form id="accountForm">
+            <div class="control-group" id="accountRoleField">
+                <label for="accountRole">Role</label>
+                <select id="accountRole">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="accountEmail">Email</label>
+                <input id="accountEmail" type="email" autocomplete="username" required>
+            </div>
+            <div class="control-group">
+                <label for="accountPassword">Password</label>
+                <input id="accountPassword" type="password" minlength="8" required>
+            </div>
+            <p id="accountMessage" role="status"></p>
+            <div class="dashboard-actions">
+                <button class="dashboard-link" id="accountSubmit" type="submit">Login</button>
+                <button class="dashboard-link" id="accountCancel" type="button">Cancel</button>
+            </div>
         </form>
     </dialog>
-    <script src="script.js?v=account-buttons"></script>
+    <script src="script.js?v=local-accounts"></script>
 </body>
 </html>

@@ -92,6 +92,28 @@ body {
     margin: 12px 0 20px;
 }
 
+#accountForm {
+    display: grid;
+    gap: 12px;
+}
+
+#accountForm input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd8ea;
+    border-radius: 5px;
+    font: inherit;
+}
+
+#accountRoleField[hidden],
+#accountMessage:empty {
+    display: none;
+}
+
+#accountMessage {
+    margin: 0;
+}
+
 .registration-dialog::backdrop {
     background-color: rgba(23, 47, 90, 0.45);
 }
