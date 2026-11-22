@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #edf3f9;
+    background-color: #f5f7fa;
     color: #333;
 }
 
@@ -17,7 +17,7 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, #12233f, #2456a6);
+    background: linear-gradient(135deg, hsl(0, 95%, 25%), #3968b9);
     color: white;
     padding: 42px 16px;
     border-radius: 10px;
@@ -48,8 +48,6 @@ h1 {
 
 .login-card {
     background-color: white;
-    border: 1px solid #d6e2ef;
-    border-top: 4px solid #2456a6;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -59,17 +57,13 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-.login-card + .login-card {
-    border-top-color: #087568;
-}
-
 .login-card:hover {
     transform: translateY(-5px);
 }
 
 .login-card h2 {
     margin-bottom: 20px;
-    color: #12233f;
+    color: #502c48;
 }
 
 .role-icon {
@@ -79,16 +73,12 @@ h1 {
     height: 72px;
     margin: 0 auto 20px;
     border-radius: 20px;
-    background-color: #eaf1ff;
+    color: #4a6491;
     font-size: 2.25rem;
 }
 
-.login-card + .login-card .role-icon {
-    background-color: #e4f5f0;
-}
-
 .login-btn {
-    background-color: #087568;
+    background-color: #172f5a;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -101,11 +91,11 @@ h1 {
 }
 
 .login-btn:hover {
-    background-color: #065d53;
+    background-color: #2c3e50;
 }
 
 .teacher-btn {
-    background-color: #2456a6;
+    background-color: #172f5a;
 }
 
 .teacher-btn:hover {
