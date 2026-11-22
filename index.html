@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=lower-login-cards">
+    <link rel="stylesheet" href="styles.css?v=teacher-preview">
 </head>
 <body>
     <div class="container" id="page-top">
@@ -43,7 +43,10 @@
         <div class="interface" id="teacherInterface">
             <div class="interface-header">
                 <h2>Teacher Dashboard - Manage Timetable</h2>
-                <button class="logout-btn" id="teacherLogoutBtn">Logout</button>
+                <div class="dashboard-actions">
+                    <button class="dashboard-link" id="openStudentPreview" type="button">Student View</button>
+                    <button class="logout-btn" id="teacherLogoutBtn">Logout</button>
+                </div>
             </div>
             
             <div class="grade-picker control-group">
@@ -165,7 +168,8 @@
         <!-- Student Interface -->
         <div class="interface" id="studentInterface">
             <div class="interface-header">
-                <h2>Student Dashboard - View Timetable</h2>
+                <h2 id="studentDashboardTitle" tabindex="-1">Student Dashboard - View Timetable</h2>
+                <button class="dashboard-link" id="backToTeacher" type="button" hidden>Back to Teacher Dashboard</button>
                 <button class="logout-btn" id="studentLogoutBtn">Logout</button>
             </div>
             
@@ -236,6 +240,6 @@
         <footer class="footer">&copy; 2026 Timetable Management System</footer>
     </div>
     
-    <script src="script.js?v=access-scroll">
+    <script src="script.js?v=teacher-preview"></script>
 </body>
 </html>

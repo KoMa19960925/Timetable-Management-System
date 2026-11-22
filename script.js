@@ -143,9 +143,38 @@ get("studentLoginBtn").addEventListener("click", () => {
     showStudentTimetable();
 });
 
+const backToTeacher = get("backToTeacher");
+const studentLogout = get("studentLogoutBtn");
+let studentGradeBeforePreview;
+
+get("openStudentPreview").addEventListener("click", () => {
+    if (!teacherInterface.classList.contains("active")) return;
+
+    studentGradeBeforePreview = studentGradeSelect.value;
+    studentGradeSelect.value = teacherGradeSelect.value;
+    teacherInterface.classList.remove("active");
+    backToTeacher.hidden = false;
+    studentLogout.hidden = true;
+    studentInterface.classList.add("active");
+    showStudentTimetable();
+    get("studentDashboardTitle").focus();
+});
+
+backToTeacher.addEventListener("click", () => {
+    if (backToTeacher.hidden) return;
+
+    studentInterface.classList.remove("active");
+    backToTeacher.hidden = true;
+    studentLogout.hidden = false;
+    studentGradeSelect.value = studentGradeBeforePreview;
+    teacherInterface.classList.add("active");
+    showTeacherTimetable();
+    get("openStudentPreview").focus();
+});
+
 for (const [button, dashboard] of [
     [get("teacherLogoutBtn"), teacherInterface],
-    [get("studentLogoutBtn"), studentInterface]
+    [studentLogout, studentInterface]
 ]) {
     button.addEventListener("click", () => {
         dashboard.classList.remove("active");
