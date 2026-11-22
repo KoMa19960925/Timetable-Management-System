@@ -6,7 +6,7 @@
 }
 
 body {
-    background-color: #f5f7fa;
+    background-color: #e2ebf5;
     color: #333;
 }
 
@@ -21,7 +21,8 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 0 4px 16px;
+    padding: 0 4px 10px;
+    font-size: 0.875rem;
 }
 
 .site-nav a {
@@ -32,7 +33,7 @@ body {
 
 .site-nav .site-brand {
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 5px 9px;
     background-color: #172f5a;
     color: white;
     text-decoration: none;
@@ -77,7 +78,7 @@ h1 {
 .login-card {
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #f0f5fc;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
