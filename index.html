@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=portal-refresh">
+    <link rel="stylesheet" href="styles.css?v=joined-portal">
 </head>
 <body>
     <div class="container" id="page-top">
+        <main id="main-content" tabindex="-1">
+        <div class="portal-shell">
         <nav class="site-nav" aria-label="Main navigation">
             <a class="site-brand" href="#page-top">TMS</a>
-            <a href="#main-content">Timetable access</a>
+            <a href="#portal-title">Timetable access</a>
         </nav>
         <header>
-            <h1>Timetable Management System</h1>
+            <h1 id="portal-title" tabindex="-1">Timetable Management System</h1>
             <p class="subtitle">For Teachers and Students</p>
         </header>
         
-        <main id="main-content" tabindex="-1">
         <section id="loginSection" aria-labelledby="access-heading">
             <h2 class="access-heading" id="access-heading">Choose your role</h2>
             <div class="login-section">
@@ -36,6 +37,7 @@
                 </div>
             </div>
         </section>
+        </div>
         
         <!-- Teacher Interface -->
         <div class="interface" id="teacherInterface">
