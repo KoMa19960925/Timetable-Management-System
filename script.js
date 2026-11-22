@@ -126,12 +126,6 @@ function showTeacherMessage(message, type) {
     }, 3000);
 }
 
-get("timetableAccessLink").addEventListener("click", event => {
-    event.preventDefault();
-    get("access-heading").focus({ preventScroll: true });
-    loginSection.scrollIntoView({ block: "center" });
-});
-
 get("teacherLoginBtn").addEventListener("click", () => {
     loginSection.style.display = "none";
     teacherInterface.classList.add("active");

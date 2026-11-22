@@ -44,10 +44,6 @@ body {
     text-underline-offset: 4px;
 }
 
-#main-content:has(.interface.active) .site-nav a[href="#access-heading"] {
-    display: none;
-}
-
 .site-nav-label {
     color: #172f5a;
     font-weight: 600;
