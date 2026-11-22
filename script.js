@@ -159,7 +159,11 @@ function setAccountMode(mode, role) {
 function openAccountDialog(mode, role) {
     accountForm.reset();
     accountMessage.textContent = "";
-    setAccountMode(mode, role);
+    setAccountMode(mode, role || "student");
+    if (!role) {
+        get("accountRoleField").hidden = false;
+        get("accountTitle").textContent = "Login";
+    }
     accountDialog.showModal();
 }
 
@@ -174,6 +178,10 @@ async function hashPassword(password, salt) {
 }
 
 get("registerBtn").addEventListener("click", () => openAccountDialog("register", "student"));
+get("navbarLogin").addEventListener("click", event => {
+    event.preventDefault();
+    openAccountDialog("login");
+});
 get("teacherLoginBtn").addEventListener("click", () => openAccountDialog("login", "teacher"));
 get("studentLoginBtn").addEventListener("click", () => openAccountDialog("login", "student"));
 accountRole.addEventListener("change", updateGradeEmailHint);
