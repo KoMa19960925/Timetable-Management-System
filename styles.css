@@ -49,6 +49,15 @@ body {
     font-weight: 600;
 }
 
+.teacher-nav-label,
+#main-content:has(#teacherInterface.active) .site-nav-label:not(.teacher-nav-label) {
+    display: none;
+}
+
+#main-content:has(#teacherInterface.active) .teacher-nav-label {
+    display: inline;
+}
+
 #main-content:has(.interface.active) .portal-shell {
     background: #f0f5fc;
     border-radius: 12px 12px 0 0;
