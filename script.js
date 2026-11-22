@@ -1,285 +1,207 @@
-// Sample timetable data
-let timetableData = {
-    "Monday": ["English", "Hindu", "Tamil", "Maths", "Science", "ICT", "Soc.Sci", "Drawing"],
-    "Tuesday": ["Tamil", "ICT", "Science", "Soc.Sci", "English", "Hindu", "Maths", "Drawing"],
-    "Wednesday": ["Science", "Hindu", "English", "ICT", "Science", "Maths", "Drawing", "Soc.Sci"],
-    "Thursday": ["Tamil", "Soc.Sci", "English", "Maths", "Science", "ICT", "Hindu", "Drawing"],
-    "Friday": ["Tamil", "Soc.Sci", "Science", "ICT", "Drawing", "Hindu", "English", "Maths"],
-    "Saturday": ["Tamil", "Hindu", "English", "Maths", "Science", "ICT", "Soc.Sci", "Drawing"],
-    "Sunday": ["Drawing", "Hindu", "English", "Maths", "Tamil", "ICT", "Soc.Sci", "Science"]
-};
-
-// Load timetable from localStorage if available
-const savedTimetable = localStorage.getItem('classTimetable');
-if (savedTimetable) {
-    timetableData = JSON.parse(savedTimetable);
-}
-
-// DOM elements
-const loginSection = document.getElementById('loginSection');
-const teacherInterface = document.getElementById('teacherInterface');
-const studentInterface = document.getElementById('studentInterface');
-const teacherLoginBtn = document.getElementById('teacherLoginBtn');
-const studentLoginBtn = document.getElementById('studentLoginBtn');
-const teacherLogoutBtn = document.getElementById('teacherLogoutBtn');
-const studentLogoutBtn = document.getElementById('studentLogoutBtn');
-const teacherTimetableBody = document.getElementById('teacherTimetableBody');
-const studentTimetableBody = document.getElementById('studentTimetableBody');
-const daySelect = document.getElementById('daySelect');
-const periodSelect = document.getElementById('periodSelect');
-const subjectSelect = document.getElementById('subjectSelect');
-const addPeriodBtn = document.getElementById('addPeriodBtn');
-const removePeriodBtn = document.getElementById('removePeriodBtn');
-const saveTimetableBtn = document.getElementById('saveTimetableBtn');
-const teacherNotification = document.getElementById('teacherNotification');
-const studentNotification = document.getElementById('studentNotification');
-
-// Days array
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const periods = 8;
+const get = id => document.getElementById(id);
+const loginSection = get("loginSection");
+const teacherInterface = get("teacherInterface");
+const studentInterface = get("studentInterface");
+const teacherGradeSelect = get("teacherGradeSelect");
+const studentGradeSelect = get("studentGradeSelect");
+const teacherTimetableBody = get("teacherTimetableBody");
+const studentTimetableBody = get("studentTimetableBody");
+const studentTable = get("studentTimetable").closest(".timetable-container");
+const daySelect = get("daySelect");
+const periodSelect = get("periodSelect");
+const subjectSelect = get("subjectSelect");
+const deleteTimetableBtn = get("deleteTimetableBtn");
+const drafts = new Map();
 
-// Login functions
-teacherLoginBtn.addEventListener('click', function() {
-    loginSection.style.display = 'none';
-    teacherInterface.classList.add('active');
-    generateTeacherTimetable();
-});
+for (const select of [teacherGradeSelect, studentGradeSelect]) {
+    for (let grade = 6; grade <= 12; grade++) {
+        const option = document.createElement("option");
+        option.value = grade;
+        option.textContent = `Grade ${grade}`;
+        select.appendChild(option);
+    }
+}
 
-studentLoginBtn.addEventListener('click', function() {
-    loginSection.style.display = 'none';
-    studentInterface.classList.add('active');
-    generateStudentTimetable();
-});
+function storageKey(grade) {
+    return `classTimetable:grade:${grade}`;
+}
 
-// Logout functions
-teacherLogoutBtn.addEventListener('click', function() {
-    teacherInterface.classList.remove('active');
-    loginSection.style.display = '';
-    showNotification(teacherNotification, "Logged out successfully", "info");
-});
+function readSavedTimetable(grade) {
+    try {
+        const stored = localStorage.getItem(storageKey(grade));
+        // Treat an earlier, ungraded save as Grade 6 until it is updated or deleted.
+        const legacy = stored === null && grade === "6";
+        const data = JSON.parse(legacy ? localStorage.getItem("classTimetable") : stored);
+        if (!data || !days.every(day => Array.isArray(data[day]))) {
+            return null;
+        }
 
-studentLogoutBtn.addEventListener('click', function() {
-    studentInterface.classList.remove('active');
-    loginSection.style.display = '';
-});
+        return Object.fromEntries(days.map(day => [
+            day,
+            Array.from({ length: periods }, (_, i) =>
+                typeof data[day][i] === "string" ? data[day][i] : "")
+        ]));
+    } catch {
+        return null;
+    }
+}
 
-// Generate teacher timetable
-function generateTeacherTimetable() {
-    teacherTimetableBody.innerHTML = '';
-    
-    days.forEach(day => {
-        const row = document.createElement('tr');
-        const dayCell = document.createElement('td');
-        dayCell.className = 'day-header';
+function blankTimetable() {
+    return Object.fromEntries(days.map(day => [day, Array(periods).fill("")]));
+}
+
+function renderTimetable(body, timetable, onSelect) {
+    body.replaceChildren();
+    if (!timetable) return;
+
+    const today = days[(new Date().getDay() + 6) % days.length];
+    for (const day of days) {
+        const row = document.createElement("tr");
+        const dayCell = document.createElement("th");
+        dayCell.scope = "row";
+        dayCell.className = "day-header";
         dayCell.textContent = day;
+        if (!onSelect && day === today) {
+            row.style.backgroundColor = "#f0f7ff";
+            dayCell.style.backgroundColor = "#3498db";
+        }
         row.appendChild(dayCell);
-        
-        // Add period cells (Periods 1-4)
-        for (let i = 0; i < 4; i++) {
-            const periodCell = document.createElement('td');
-            const subject = timetableData[day][i];
-            
-            if (subject) {
-                periodCell.className = `subject-cell ${subject.toLowerCase().replace('.', '-').replace(' ', '-')}`;
-                periodCell.textContent = subject;
-                periodCell.dataset.day = day;
-                periodCell.dataset.period = i;
-                
-                // Add click to select this cell
-                periodCell.addEventListener('click', function() {
-                    daySelect.value = day;
-                    periodSelect.value = i + 1;
-                    subjectSelect.value = subject;
-                    showNotification(teacherNotification, `Selected ${day} - Period ${i+1}: ${subject}`, "info");
-                });
-            } else {
-                periodCell.className = 'subject-cell empty-cell';
-                periodCell.textContent = 'Free';
-                periodCell.dataset.day = day;
-                periodCell.dataset.period = i;
-                
-                periodCell.addEventListener('click', function() {
-                    daySelect.value = day;
-                    periodSelect.value = i + 1;
-                    subjectSelect.value = '';
-                    showNotification(teacherNotification, `Selected ${day} - Period ${i+1}: Free`, "info");
-                });
+
+        timetable[day].forEach((subject, period) => {
+            if (period === 4) row.appendChild(document.createElement("td"));
+
+            const cell = document.createElement("td");
+            const subjectClass = subject.toLowerCase().replace(/[. ]/g, "-");
+            cell.className = `subject-cell ${subjectClass || "empty-cell"}`;
+            cell.textContent = subject || "Free";
+            if (onSelect) {
+                cell.addEventListener("click", () => onSelect(day, period, subject));
             }
-            
-            row.appendChild(periodCell);
-        }
-        
-        // Add break cell (empty cell that's handled by the header)
-        row.appendChild(document.createElement('td'));
-        
-        // Add period cells (Periods 5-8)
-        for (let i = 4; i < 8; i++) {
-            const periodCell = document.createElement('td');
-            const subject = timetableData[day][i];
-            
-            if (subject) {
-                periodCell.className = `subject-cell ${subject.toLowerCase().replace('.', '-').replace(' ', '-')}`;
-                periodCell.textContent = subject;
-                periodCell.dataset.day = day;
-                periodCell.dataset.period = i;
-                
-                // Add click to select this cell
-                periodCell.addEventListener('click', function() {
-                    daySelect.value = day;
-                    periodSelect.value = i + 1;
-                    subjectSelect.value = subject;
-                    showNotification(teacherNotification, `Selected ${day} - Period ${i+1}: ${subject}`, "info");
-                });
-            } else {
-                periodCell.className = 'subject-cell empty-cell';
-                periodCell.textContent = 'Free';
-                periodCell.dataset.day = day;
-                periodCell.dataset.period = i;
-                
-                periodCell.addEventListener('click', function() {
-                    daySelect.value = day;
-                    periodSelect.value = i + 1;
-                    subjectSelect.value = '';
-                    showNotification(teacherNotification, `Selected ${day} - Period ${i+1}: Free`, "info");
-                });
-            }
-            
-            row.appendChild(periodCell);
-        }
-        
-        teacherTimetableBody.appendChild(row);
+            row.appendChild(cell);
+        });
+        body.appendChild(row);
+    }
+}
+
+function showTeacherTimetable() {
+    const grade = teacherGradeSelect.value;
+    const saved = readSavedTimetable(grade);
+    const draft = drafts.get(grade);
+    deleteTimetableBtn.disabled = !saved && !draft;
+    get("teacherGradeStatus").textContent = draft
+        ? `Grade ${grade} has unsaved changes.`
+        : saved
+            ? `Grade ${grade} timetable is saved.`
+            : `Grade ${grade} has no saved timetable. Add periods, then save.`;
+
+    renderTimetable(teacherTimetableBody, draft || saved || blankTimetable(), (day, period, subject) => {
+        daySelect.value = day;
+        periodSelect.value = period + 1;
+        subjectSelect.value = subject;
+        showTeacherMessage(`Selected ${day}, Period ${period + 1}: ${subject || "Free"}`, "info");
     });
 }
 
-// Generate student timetable
-function generateStudentTimetable() {
-    studentTimetableBody.innerHTML = '';
-    
-    const today = new Date().getDay();
-    // Adjust for Sunday (0) to be the last day in our array
-    const todayIndex = today === 0 ? 6 : today - 1;
-    
-    days.forEach((day, index) => {
-        const row = document.createElement('tr');
-        
-        // Highlight today's row
-        if (index === todayIndex) {
-            row.style.backgroundColor = '#f0f7ff';
-        }
-        
-        const dayCell = document.createElement('td');
-        dayCell.className = 'day-header';
-        dayCell.textContent = day;
-        
-        // Highlight today's cell
-        if (index === todayIndex) {
-            dayCell.style.backgroundColor = '#3498db';
-        }
-        
-        row.appendChild(dayCell);
-        
-        // Add period cells (Periods 1-4)
-        for (let i = 0; i < 4; i++) {
-            const periodCell = document.createElement('td');
-            const subject = timetableData[day][i];
-            
-            if (subject) {
-                periodCell.className = `subject-cell ${subject.toLowerCase().replace('.', '-').replace(' ', '-')}`;
-                periodCell.textContent = subject;
-            } else {
-                periodCell.className = 'subject-cell empty-cell';
-                periodCell.textContent = 'Free';
-            }
-            
-            row.appendChild(periodCell);
-        }
-        
-        // Add break cell (empty cell that's handled by the header)
-        row.appendChild(document.createElement('td'));
-        
-        // Add period cells (Periods 5-8)
-        for (let i = 4; i < 8; i++) {
-            const periodCell = document.createElement('td');
-            const subject = timetableData[day][i];
-            
-            if (subject) {
-                periodCell.className = `subject-cell ${subject.toLowerCase().replace('.', '-').replace(' ', '-')}`;
-                periodCell.textContent = subject;
-            } else {
-                periodCell.className = 'subject-cell empty-cell';
-                periodCell.textContent = 'Free';
-            }
-            
-            row.appendChild(periodCell);
-        }
-        
-        studentTimetableBody.appendChild(row);
-    });
+function showStudentTimetable() {
+    const grade = studentGradeSelect.value;
+    const saved = readSavedTimetable(grade);
+    get("studentGradeStatus").textContent = saved
+        ? `Grade ${grade} timetable`
+        : `No timetable has been saved for Grade ${grade}.`;
+    studentTable.hidden = !saved;
+    renderTimetable(studentTimetableBody, saved);
 }
 
-// Add/Update period
-addPeriodBtn.addEventListener('click', function() {
-    const day = daySelect.value;
-    const period = parseInt(periodSelect.value) - 1;
-    const subject = subjectSelect.value;
-    
-    if (!day || period < 0 || period > 7) {
-        showNotification(teacherNotification, "Please select valid day and period", "error");
-        return;
-    }
-    
-    if (subject) {
-        timetableData[day][period] = subject;
-        showNotification(teacherNotification, `Updated ${day} - Period ${period+1} to ${subject}`, "success");
-    } else {
-        timetableData[day][period] = "";
-        showNotification(teacherNotification, `Cleared ${day} - Period ${period+1}`, "info");
-    }
-    
-    generateTeacherTimetable();
-});
-
-// Remove period
-removePeriodBtn.addEventListener('click', function() {
-    const day = daySelect.value;
-    const period = parseInt(periodSelect.value) - 1;
-    
-    if (!day || period < 0 || period > 7) {
-        showNotification(teacherNotification, "Please select valid day and period", "error");
-        return;
-    }
-    
-    timetableData[day][period] = "";
-    showNotification(teacherNotification, `Removed subject from ${day} - Period ${period+1}`, "success");
-    subjectSelect.value = "";
-    generateTeacherTimetable();
-});
-
-// Save timetable
-saveTimetableBtn.addEventListener('click', function() {
-    localStorage.setItem('classTimetable', JSON.stringify(timetableData));
-    showNotification(teacherNotification, "Timetable saved successfully!", "success");
-    
-    // Update student view if it's open
-    if (studentInterface.classList.contains('active')) {
-        generateStudentTimetable();
-    }
-});
-
-// Show notification
-function showNotification(container, message, type) {
-    container.textContent = message;
-    container.className = `notification ${type}`;
-    container.style.display = 'block';
-    
-    setTimeout(() => {
-        container.style.display = 'none';
+let messageTimeout;
+function showTeacherMessage(message, type) {
+    const notification = get("teacherNotification");
+    clearTimeout(messageTimeout);
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = "block";
+    messageTimeout = setTimeout(() => {
+        notification.style.display = "none";
     }, 3000);
 }
 
-// Initialize the system
-generateTeacherTimetable();
+get("teacherLoginBtn").addEventListener("click", () => {
+    loginSection.style.display = "none";
+    teacherInterface.classList.add("active");
+    showTeacherTimetable();
+});
+get("studentLoginBtn").addEventListener("click", () => {
+    loginSection.style.display = "none";
+    studentInterface.classList.add("active");
+    showStudentTimetable();
+});
 
-// Show student notification for a few seconds
-setTimeout(() => {
-    studentNotification.style.display = 'none';
-}, 5000);
+for (const [button, dashboard] of [
+    [get("teacherLogoutBtn"), teacherInterface],
+    [get("studentLogoutBtn"), studentInterface]
+]) {
+    button.addEventListener("click", () => {
+        dashboard.classList.remove("active");
+        loginSection.style.display = "";
+    });
+}
+
+teacherGradeSelect.addEventListener("change", () => {
+    get("teacherNotification").style.display = "none";
+    subjectSelect.value = "";
+    showTeacherTimetable();
+});
+studentGradeSelect.addEventListener("change", showStudentTimetable);
+
+function updatePeriod(subject) {
+    const grade = teacherGradeSelect.value;
+    const draft = drafts.get(grade) || readSavedTimetable(grade) || blankTimetable();
+    draft[daySelect.value][Number(periodSelect.value) - 1] = subject;
+    drafts.set(grade, draft);
+    showTeacherTimetable();
+}
+
+get("addPeriodBtn").addEventListener("click", () => updatePeriod(subjectSelect.value));
+get("removePeriodBtn").addEventListener("click", () => {
+    subjectSelect.value = "";
+    updatePeriod("");
+});
+
+get("saveTimetableBtn").addEventListener("click", () => {
+    const grade = teacherGradeSelect.value;
+    const timetable = drafts.get(grade) || readSavedTimetable(grade) || blankTimetable();
+    try {
+        localStorage.setItem(storageKey(grade), JSON.stringify(timetable));
+    } catch {
+        showTeacherMessage("Unable to save the timetable in this browser.", "error");
+        return;
+    }
+    drafts.delete(grade);
+    showTeacherTimetable();
+    showTeacherMessage(`Grade ${grade} timetable saved.`, "success");
+});
+
+deleteTimetableBtn.addEventListener("click", () => {
+    const grade = teacherGradeSelect.value;
+    if (!window.confirm(`Delete the Grade ${grade} timetable and any unsaved changes?`)) return;
+
+    try {
+        // Record deletion even for Grade 6 so a legacy save cannot reappear.
+        localStorage.setItem(storageKey(grade), "null");
+    } catch {
+        showTeacherMessage("Unable to delete the timetable in this browser.", "error");
+        return;
+    }
+    drafts.delete(grade);
+    subjectSelect.value = "";
+    showTeacherTimetable();
+    showTeacherMessage(`Grade ${grade} timetable deleted.`, "success");
+});
+
+window.addEventListener("storage", event => {
+    if (event.key === null || event.key === "classTimetable" || event.key.startsWith("classTimetable:grade:")) {
+        if (studentInterface.classList.contains("active")) showStudentTimetable();
+        if (teacherInterface.classList.contains("active")) showTeacherTimetable();
+    }
+});

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=portal-footer">
+    <link rel="stylesheet" href="styles.css?v=grade-timetables">
 </head>
 <body>
     <div class="container" id="page-top">
@@ -46,7 +46,12 @@
                 <button class="logout-btn" id="teacherLogoutBtn">Logout</button>
             </div>
             
-            <div class="notification" id="teacherNotification"></div>
+            <div class="grade-picker control-group">
+                <label for="teacherGradeSelect">Select Grade</label>
+                <select id="teacherGradeSelect"></select>
+                <p id="teacherGradeStatus" role="status"></p>
+            </div>
+            <div class="notification" id="teacherNotification" role="status"></div>
             
             <div class="timetable-controls">
                 <div class="control-group">
@@ -96,6 +101,7 @@
                 <button class="action-btn add-btn" id="addPeriodBtn">Add/Update Period</button>
                 <button class="action-btn remove-btn" id="removePeriodBtn">Remove Period</button>
                 <button class="action-btn save-btn" id="saveTimetableBtn">Save Timetable</button>
+                <button class="action-btn remove-btn" id="deleteTimetableBtn">Delete Grade Timetable</button>
             </div>
             
             <div class="legend">
@@ -163,8 +169,10 @@
                 <button class="logout-btn" id="studentLogoutBtn">Logout</button>
             </div>
             
-            <div class="notification info" id="studentNotification">
-                <strong>Today's Schedule Highlighted</strong> - You can view the timetable for all days of the week.
+            <div class="grade-picker control-group">
+                <label for="studentGradeSelect">Select Grade</label>
+                <select id="studentGradeSelect"></select>
+                <p id="studentGradeStatus" role="status"></p>
             </div>
             
             <div class="legend">
@@ -228,6 +236,6 @@
         <footer class="footer">Timetable Management System</footer>
     </div>
     
-    <script src="script.js?v=landing-layout"></script>
+    <script src="script.js?v=grade-timetables"></script>
 </body>
 </html>

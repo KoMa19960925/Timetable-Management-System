@@ -404,6 +404,38 @@ th {
     font-size: 0.9rem;
 }
 
+.grade-picker {
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.grade-picker select {
+    width: min(100%, 14rem);
+}
+
+.grade-picker p {
+    margin-top: 8px;
+    color: #34495e;
+}
+
+.action-btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+}
+
+#studentInterface .subject-cell {
+    cursor: default;
+}
+
+#studentInterface .subject-cell:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.timetable-container[hidden] {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .container,
     .interface {
