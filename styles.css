@@ -34,6 +34,10 @@ body {
     text-underline-offset: 4px;
 }
 
+#main-content:has(.interface.active) .site-nav a[href="#access-heading"] {
+    display: none;
+}
+
 .site-nav .site-brand {
     border-radius: 8px;
     padding: 5px 9px;
@@ -73,9 +77,16 @@ h1 {
 }
 
 .access-heading {
+    width: fit-content;
     text-align: center;
-    margin-bottom: 16px;
+    margin: 0 auto 16px;
     color: white;
+}
+
+.access-heading:focus {
+    outline: 2px solid white;
+    outline-offset: 4px;
+    border-radius: 4px;
 }
 
 .login-section {
