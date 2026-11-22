@@ -136,6 +136,14 @@ const accountSubmit = get("accountSubmit");
 const accountCancel = get("accountCancel");
 let registering = false;
 
+function studentGradeForEmail(email) {
+    return /^grade(6|7|8|9|10|11|12)@gmail\.com$/.exec(email)?.[1];
+}
+
+function updateGradeEmailHint() {
+    get("gradeEmailHint").hidden = accountRole.value !== "student";
+}
+
 function setAccountMode(mode, role) {
     registering = mode === "register";
     accountRole.value = role;
@@ -145,6 +153,7 @@ function setAccountMode(mode, role) {
         : role === "teacher" ? "Teacher Login" : "Student Login";
     accountSubmit.textContent = registering ? "Register" : "Login";
     accountPassword.autocomplete = registering ? "new-password" : "current-password";
+    updateGradeEmailHint();
 }
 
 function openAccountDialog(mode, role) {
@@ -167,6 +176,7 @@ async function hashPassword(password, salt) {
 get("registerBtn").addEventListener("click", () => openAccountDialog("register", "student"));
 get("teacherLoginBtn").addEventListener("click", () => openAccountDialog("login", "teacher"));
 get("studentLoginBtn").addEventListener("click", () => openAccountDialog("login", "student"));
+accountRole.addEventListener("change", updateGradeEmailHint);
 accountCancel.addEventListener("click", () => accountDialog.close());
 accountDialog.addEventListener("cancel", event => {
     if (accountSubmit.disabled) event.preventDefault();
@@ -179,13 +189,27 @@ accountForm.addEventListener("submit", async event => {
     const role = accountRole.value;
     const email = accountEmail.value.trim().toLowerCase();
     const password = accountPassword.value;
-    const key = `tms:demo-account:${email}`;
+    const studentGrade = studentGradeForEmail(email);
+    if (role === "student" && !studentGrade) {
+        accountMessage.textContent = "Use your grade email, from grade6@gmail.com to grade12@gmail.com.";
+        return;
+    }
+    if (registering && role === "teacher" && studentGrade) {
+        accountMessage.textContent = "Grade emails are for student accounts. Use a different email for Teacher Login.";
+        return;
+    }
+    const legacyKey = `tms:demo-account:${email}`;
+    const key = role === "student" ? `tms:student-account:${email}` : legacyKey;
     accountSubmit.disabled = true;
     accountCancel.disabled = true;
     accountMessage.textContent = "";
 
     try {
-        const account = JSON.parse(localStorage.getItem(key));
+        const storedAccount = localStorage.getItem(key);
+        const legacyAccount = storedAccount === null && role === "student"
+            ? JSON.parse(localStorage.getItem(legacyKey))
+            : null;
+        const account = legacyAccount?.role === "student" ? legacyAccount : JSON.parse(storedAccount);
         if (registering) {
             if (account) {
                 accountMessage.textContent = "An account with this email already exists.";
@@ -193,7 +217,7 @@ accountForm.addEventListener("submit", async event => {
             }
             const salt = crypto.getRandomValues(new Uint8Array(16));
             const hash = await hashPassword(password, salt);
-            if (localStorage.getItem(key) !== null) {
+            if (localStorage.getItem(key) !== storedAccount) {
                 accountMessage.textContent = "An account with this email already exists.";
                 return;
             }
@@ -217,6 +241,8 @@ accountForm.addEventListener("submit", async event => {
             teacherInterface.classList.add("active");
             showTeacherTimetable();
         } else {
+            studentGradeSelect.value = studentGrade;
+            studentGradeSelect.disabled = true;
             studentInterface.classList.add("active");
             showStudentTimetable();
         }
@@ -237,6 +263,7 @@ get("openStudentPreview").addEventListener("click", () => {
 
     studentGradeBeforePreview = studentGradeSelect.value;
     studentGradeSelect.value = teacherGradeSelect.value;
+    studentGradeSelect.disabled = false;
     teacherInterface.classList.remove("active");
     backToTeacher.hidden = false;
     studentLogout.hidden = true;
