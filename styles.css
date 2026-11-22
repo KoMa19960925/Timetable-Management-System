@@ -61,6 +61,22 @@ body {
 
 .nav-account-actions a {
     text-decoration: none;
+    background-color: #172f5a;
+    color: white;
+}
+
+.nav-account-actions button {
+    background-color: #800020;
+    border-color: #800020;
+    color: white;
+}
+
+.nav-account-actions a:hover {
+    background-color: #243e6c;
+}
+
+.nav-account-actions button:hover {
+    background-color: #660019;
 }
 
 .registration-dialog {
