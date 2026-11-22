@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=teacher-navbar-label">
+    <link rel="stylesheet" href="styles.css?v=account-buttons">
 </head>
 <body>
     <div class="container" id="page-top">
@@ -12,7 +12,10 @@
         <div class="portal-shell">
         <nav class="site-nav" aria-label="Main navigation">
             <a class="site-brand" href="#page-top">TMS</a>
-            <span class="site-nav-label">For Teachers and Students</span>
+            <div class="nav-account-actions">
+                <a class="dashboard-link" href="#access-heading">Login</a>
+                <button class="dashboard-link" id="registerBtn" type="button">Register</button>
+            </div>
             <span class="site-nav-label teacher-nav-label">For Teachers</span>
         </nav>
         <header>
@@ -240,6 +243,13 @@
         <footer class="footer">&copy; 2026 Timetable Management System</footer>
     </div>
     
-    <script src="script.js?v=clean-navbar"></script>
+    <dialog class="registration-dialog" id="registrationDialog" aria-labelledby="registrationTitle">
+        <h2 id="registrationTitle">Register</h2>
+        <p>Account registration is not available yet.</p>
+        <form method="dialog">
+            <button class="dashboard-link" type="submit">Close</button>
+        </form>
+    </dialog>
+    <script src="script.js?v=account-buttons"></script>
 </body>
 </html>

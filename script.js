@@ -126,6 +126,10 @@ function showTeacherMessage(message, type) {
     }, 3000);
 }
 
+get("registerBtn").addEventListener("click", () => {
+    get("registrationDialog").showModal();
+});
+
 get("teacherLoginBtn").addEventListener("click", () => {
     loginSection.style.display = "none";
     teacherInterface.classList.add("active");

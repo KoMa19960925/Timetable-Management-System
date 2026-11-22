@@ -50,8 +50,34 @@ body {
 }
 
 .teacher-nav-label,
-#main-content:has(#teacherInterface.active) .site-nav-label:not(.teacher-nav-label) {
+#main-content:has(.interface.active) .nav-account-actions {
     display: none;
+}
+
+.nav-account-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-account-actions a {
+    text-decoration: none;
+}
+
+.registration-dialog {
+    margin: auto;
+    padding: 24px;
+    max-width: calc(100% - 32px);
+    border: 1px solid #cbd8ea;
+    border-radius: 12px;
+    color: #172f5a;
+}
+
+.registration-dialog p {
+    margin: 12px 0 20px;
+}
+
+.registration-dialog::backdrop {
+    background-color: rgba(23, 47, 90, 0.45);
 }
 
 #main-content:has(#teacherInterface.active) .teacher-nav-label {
