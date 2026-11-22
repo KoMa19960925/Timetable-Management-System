@@ -53,13 +53,13 @@ studentLoginBtn.addEventListener('click', function() {
 // Logout functions
 teacherLogoutBtn.addEventListener('click', function() {
     teacherInterface.classList.remove('active');
-    loginSection.style.display = 'flex';
+    loginSection.style.display = '';
     showNotification(teacherNotification, "Logged out successfully", "info");
 });
 
 studentLogoutBtn.addEventListener('click', function() {
     studentInterface.classList.remove('active');
-    loginSection.style.display = 'flex';
+    loginSection.style.display = '';
 });
 
 // Generate teacher timetable

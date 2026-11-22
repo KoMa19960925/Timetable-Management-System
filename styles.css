@@ -16,6 +16,28 @@ body {
     padding: 20px;
 }
 
+.site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4px 16px;
+}
+
+.site-nav a {
+    color: #172f5a;
+    font-weight: 600;
+    text-underline-offset: 4px;
+}
+
+.site-nav .site-brand {
+    border-radius: 8px;
+    padding: 8px 12px;
+    background-color: #172f5a;
+    color: white;
+    text-decoration: none;
+}
+
 header {
     background: linear-gradient(135deg, hsl(0, 95%, 25%), #3968b9);
     color: white;
@@ -38,6 +60,12 @@ h1 {
     font-weight: 300;
 }
 
+.access-heading {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #502c48;
+}
+
 .login-section {
     display: flex;
     justify-content: center;
@@ -47,6 +75,8 @@ h1 {
 }
 
 .login-card {
+    display: flex;
+    flex-direction: column;
     background-color: white;
     padding: 30px;
     border-radius: 10px;
@@ -55,6 +85,11 @@ h1 {
     max-width: 100%;
     text-align: center;
     transition: transform 0.3s ease;
+}
+
+.login-card p {
+    flex: 1;
+    line-height: 1.5;
 }
 
 .login-card:hover {

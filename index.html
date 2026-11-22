@@ -4,16 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Timetable Management System</title>
-    <link rel="stylesheet" href="styles.css?v=original-colors">
+    <link rel="stylesheet" href="styles.css?v=landing-layout">
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="page-top">
+        <nav class="site-nav" aria-label="Main navigation">
+            <a class="site-brand" href="#page-top">TMS</a>
+            <a href="#main-content">Timetable access</a>
+        </nav>
         <header>
             <h1>Timetable Management System</h1>
             <p class="subtitle">For Teachers and Students</p>
         </header>
         
-        <div class="login-section" id="loginSection">
+        <main id="main-content" tabindex="-1">
+        <section id="loginSection" aria-labelledby="access-heading">
+            <h2 class="access-heading" id="access-heading">Choose your role</h2>
+            <div class="login-section">
             <div class="login-card">
                 <div class="role-icon">👨‍🏫</div>
                 <h2>Teacher Login</h2>
@@ -27,7 +34,8 @@
                 <p>View your class timetable</p>
                 <button class="login-btn" id="studentLoginBtn">Login as Student</button>
             </div>
-        </div>
+            </div>
+        </section>
         
         <!-- Teacher Interface -->
         <div class="interface" id="teacherInterface">
@@ -214,8 +222,9 @@
                 </table>
             </div>
         </div>
+        </main>
     </div>
     
-    <script src="script.js"></script>
+    <script src="script.js?v=landing-layout"></script>
 </body>
 </html>
