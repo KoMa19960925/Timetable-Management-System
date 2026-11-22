@@ -272,6 +272,83 @@ h1 {
     box-shadow: inset 0 0 0 2px #3968b9;
 }
 
+.teacher-editor {
+    margin-bottom: 20px;
+    padding: clamp(14px, 3vw, 22px);
+    border: 1px solid #cbdcf2;
+    border-radius: 12px;
+    background-color: #eef6ff;
+}
+
+.teacher-editor .timetable-controls {
+    margin-bottom: 0;
+}
+
+.teacher-editor .action-btns {
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.teacher-editor .add-btn {
+    background-color: #157347;
+}
+
+.teacher-editor .add-btn:hover {
+    background-color: #105c39;
+}
+
+.teacher-editor .save-btn {
+    background-color: #175ab4;
+}
+
+.teacher-editor .save-btn:hover {
+    background-color: #124991;
+}
+
+.teacher-editor .remove-btn {
+    color: #a12039;
+    background-color: white;
+    box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.teacher-editor .remove-btn:hover {
+    background-color: #fff2f4;
+}
+
+#teacherInterface .legend {
+    border: 1px solid #dbe5f1;
+    background-color: #f6faff;
+}
+
+#teacherTimetable .period-header {
+    background-color: #24518e;
+}
+
+#teacherTimetable .break-cell {
+    writing-mode: horizontal-tb;
+    padding: 10px 8px;
+    font-size: 0.875rem;
+    letter-spacing: 0;
+}
+
+#teacherTimetable .break-cell,
+#teacherTimetable tbody td:nth-child(6) {
+    background-color: #e4edf8;
+    color: #30466c;
+}
+
+#teacherTimetable .empty-cell {
+    color: #536479;
+}
+
+#teacherTimetable .maths {
+    color: #a34b00;
+}
+
+#teacherTimetable .drawing {
+    color: #865100;
+}
+
 .interface-header {
     display: flex;
     justify-content: space-between;
