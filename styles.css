@@ -272,7 +272,8 @@ h1 {
     box-shadow: inset 0 0 0 2px #3968b9;
 }
 
-.teacher-editor {
+.teacher-editor,
+#studentInterface .grade-picker {
     margin-bottom: 20px;
     padding: clamp(14px, 3vw, 22px);
     border: 1px solid #cbdcf2;
@@ -315,37 +316,37 @@ h1 {
     background-color: #fff2f4;
 }
 
-#teacherInterface .legend {
+.interface .legend {
     border: 1px solid #dbe5f1;
     background-color: #f6faff;
 }
 
-#teacherTimetable .period-header {
+.interface .period-header {
     background-color: #24518e;
 }
 
-#teacherTimetable .break-cell {
+.interface .break-cell {
     writing-mode: horizontal-tb;
     padding: 10px 8px;
     font-size: 0.875rem;
     letter-spacing: 0;
 }
 
-#teacherTimetable .break-cell,
-#teacherTimetable tbody td:nth-child(6) {
+.interface .break-cell,
+.interface tbody td:nth-child(6) {
     background-color: #e4edf8;
     color: #30466c;
 }
 
-#teacherTimetable .empty-cell {
+.interface .empty-cell {
     color: #536479;
 }
 
-#teacherTimetable .maths {
+.interface .maths {
     color: #a34b00;
 }
 
-#teacherTimetable .drawing {
+.interface .drawing {
     color: #865100;
 }
 
